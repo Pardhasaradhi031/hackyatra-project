@@ -1,36 +1,127 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Project Setup Guide
+
+## Prerequisites
+
+Before running this project, make sure you have the following installed:
+
+### 1. Node.js
+
+* Install the latest **LTS** version (recommended: Node.js 22.x LTS).
+* Verify installation:
+
+```bash
+node -v
+npm -v
+```
+
+### 2. Git
+
+* Install Git.
+* Verify installation:
+
+```bash
+git --version
+```
+
+### 3. Visual Studio Code (Recommended)
+
+Recommended extensions:
+
+* ESLint
+* Tailwind CSS IntelliSense
+* Prettier
+* GitLens
 
 ## Getting Started
 
-First, run the development server:
+### Clone the repository
+
+```bash
+git clone <repository-url>
+```
+
+### Open the project
+
+```bash
+cd <project-folder>
+```
+
+### Install dependencies
+
+```bash
+npm install
+```
+
+### Start the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open your browser at:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Available Scripts
 
-## Learn More
+Start development server:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Create a production build:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run build
+```
 
-## Deploy on Vercel
+Start the production build:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run start
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Run ESLint:
+
+```bash
+npm run lint
+```
+
+## Project Requirements
+
+* Node.js (LTS)
+* npm (comes with Node.js)
+* Git
+* Internet connection (for installing packages)
+
+## Team Workflow
+
+1. Pull the latest changes before starting work:
+
+```bash
+git pull origin main
+```
+
+2. Create a new feature branch:
+
+```bash
+git checkout -b feature/<feature-name>
+```
+
+3. Commit your changes:
+
+```bash
+git add .
+git commit -m "Describe your changes"
+```
+
+4. Push your branch:
+
+```bash
+git push origin feature/<feature-name>
+```
+
+5. Create a Pull Request to merge into `main`.
