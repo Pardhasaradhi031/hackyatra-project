@@ -1,64 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { login } from "@/services/auth.service";
+
 
 export default function LoginPage() {
-  const router = useRouter();
-
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    setLoading(true);
-    setError("");
-
-    try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(form),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.message || "Login failed");
-        return;
-      }
-
-      alert("Login Successful");
-
-      if (data.user.role === "ADMIN") {
-        router.push("/admin/dashboard");
-      } else if (data.user.role === "OFFICER") {
-        router.push("/officer/dashboard");
-      } else {
-        router.push("/citizen/dashboard");
-      }
-    } catch (err) {
-      setError("Something went wrong.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 px-4">
       <div className="w-full max-w-md rounded-xl bg-white p-8 shadow-lg">
@@ -71,8 +19,8 @@ export default function LoginPage() {
           Login to continue
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-
+        <form className="space-y-5">
+          {/* Email */}
           <div>
             <label className="mb-2 block text-sm font-medium">
               Email
@@ -81,10 +29,8 @@ export default function LoginPage() {
             <input
               name="email"
               type="email"
-              value={form.email}
-              onChange={handleChange}
-              placeholder="example@gmail.com"
-              className="w-full rounded-lg border px-4 py-3 outline-none focus:border-blue-500"
+              placeholder="Enter your email"
+              className="w-full rounded-md border border-gray-300 px-4 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
             />
           </div>
 
@@ -93,14 +39,20 @@ export default function LoginPage() {
               Password
             </label>
 
-            <input
-              name="password"
-              type="password"
-              value={form.password}
-              onChange={handleChange}
-              placeholder="********"
-              className="w-full rounded-lg border px-4 py-3 outline-none focus:border-blue-500"
-            />
+            <div className="relative">
+              <input
+                type="password"
+                placeholder="Enter your password"
+                className="w-full rounded-md border border-gray-300 px-4 py-2 pr-10 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              />
+
+              {/* <button
+                type="button"
+                className="absolute inset-y-0 right-3 flex items-center text-gray-500"
+              >
+                👁️
+              </button> */}
+            </div>
           </div>
 
           {error && (
@@ -109,7 +61,9 @@ export default function LoginPage() {
             </div>
           )}
 
+          {/* Login Button */}
           <button
+            disabled={loading}
             type="submit"
             disabled={loading}
             className="w-full rounded-lg bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:bg-gray-400"
@@ -119,12 +73,9 @@ export default function LoginPage() {
         </form>
 
         <p className="mt-6 text-center text-sm text-gray-500">
-          Don't have an account?
-          <a
-            href="/register"
-            className="ml-1 font-semibold text-blue-600"
-          >
-            Register
+          Don't have an account?{" "}
+          <a href="#" className="text-blue-600 font-medium hover:underline">
+            Register here
           </a>
         </p>
 
