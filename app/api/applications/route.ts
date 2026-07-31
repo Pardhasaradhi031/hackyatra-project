@@ -1,16 +1,10 @@
 import { NextResponse } from "next/server";
 
+import {pool} from "@/lib/db";
 import { getCurrentUser } from "@/lib/current-user";
 
-import { createApplicationSchema } from "@/lib/validation/application.schema";
-
-import { createApplication } from "@/lib/repositories/application.repository";
-
-import { generateApplicationNumber } from "@/lib/application-number";
-
-export async function POST(req: Request) {
+export async function GET() {
   try {
-    // Check logged in user
     const user = await getCurrentUser();
 
     if (!user) {
@@ -25,60 +19,35 @@ export async function POST(req: Request) {
       );
     }
 
-    // Only citizens can apply
-    if (user.role !== "Citizen") {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Forbidden",
-        },
-        {
-          status: 403,
-        }
-      );
-    }
-
-    // Read request body
-    const body = await req.json();
-
-    // Validate
-    const parsed = createApplicationSchema.safeParse(body);
-
-    if (!parsed.success) {
-      return NextResponse.json(
-        {
-          success: false,
-          errors: parsed.error.flatten().fieldErrors,
-        },
-        {
-          status: 400,
-        }
-      );
-    }
-
-    // Generate Application Number
-    const applicationNumber =
-      await generateApplicationNumber();
-
-    // Save
-    const application = await createApplication({
-      citizenId: user.id,
-      applicationNumber,
-      ...parsed.data,
-    });
+    const { rows } = await pool.query(
+      `
+      SELECT
+        id,
+        application_number,
+        application_type,
+        status,
+        current_stage,
+        created_at,
+        updated_at,
+        sla_due_date
+      FROM applications
+      WHERE citizen_id = $1
+      ORDER BY created_at DESC
+      `,
+      [user.id]
+    );
 
     return NextResponse.json(
       {
         success: true,
-        message: "Application submitted successfully.",
-        application,
+        applications: rows,
       },
       {
-        status: 201,
+        status: 200,
       }
     );
   } catch (error) {
-    console.error(error);
+    console.error("GET /api/applications", error);
 
     return NextResponse.json(
       {
