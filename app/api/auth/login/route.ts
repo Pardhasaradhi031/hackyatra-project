@@ -16,7 +16,7 @@ export async function POST(req: Request) {
         {
           errors: parsed.error.flatten().fieldErrors,
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -29,21 +29,18 @@ export async function POST(req: Request) {
         {
           message: "Invalid email or password",
         },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
-    const isPasswordCorrect = await comparePassword(
-      password,
-      user.password
-    );
+    const isPasswordCorrect = await comparePassword(password, user.password);
 
     if (!isPasswordCorrect) {
       return NextResponse.json(
         {
           message: "Invalid email or password",
         },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -64,6 +61,7 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({
+      success: true,
       message: "Login successful",
       user: {
         id: user.id,
@@ -72,17 +70,15 @@ export async function POST(req: Request) {
         role: user.role,
       },
     });
-
   } catch (error) {
     console.error(error);
 
     return NextResponse.json(
       {
-        message: "Internal Server Error",
+        success: false,
+        message: "Invalid email or password",
       },
-      {
-        status: 500,
-      }
+      { status: 401 },
     );
   }
 }
