@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { login } from "@/services/auth.service";
@@ -143,7 +144,7 @@ export default function LoginPage() {
 
         <p className="mt-6 text-center text-sm text-gray-500">
           Don&apos;t have an account?{" "}
-          <a href="#" className="text-blue-600 font-medium hover:underline">
+          <Link href="/register" className="text-blue-600 font-medium hover:underline">
             Register here
           </Link>
         </p>
