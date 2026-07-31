@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 
-import Sidebar from "@/components/Sidebar";
-import Header from "@/components/Header";
+import Sidebar from "@/components/citizen/Sidebar";
+import Header from "@/components/citizen/Header";
 
 import { useDashboard } from "@/hooks/useDashboard";
 
