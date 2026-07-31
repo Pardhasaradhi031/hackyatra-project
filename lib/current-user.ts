@@ -17,7 +17,8 @@ export async function getCurrentUser() {
     const user = await findUserById(payload.id);
 
     return user ?? null;
-  } catch {
+  } catch (error) {
+    console.error(error);
     return null;
   }
 }
