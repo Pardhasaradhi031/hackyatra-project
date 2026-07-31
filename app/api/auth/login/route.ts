@@ -22,7 +22,13 @@ export async function POST(req: Request) {
 
     const { email, password } = parsed.data;
 
+    console.log("LOGIN EMAIL:", email);
+    console.log("PASSWORD:", JSON.stringify(password));
+    console.log("PASSWORD LENGTH:", password.length);
+
     const user = await findUserByEmail(email);
+
+    console.log("FOUND USER:", user);
 
     if (!user) {
       return NextResponse.json(
@@ -35,6 +41,14 @@ export async function POST(req: Request) {
 
     const isPasswordCorrect = await comparePassword(password, user.password);
 
+    if (!user) {
+      return NextResponse.json(
+        {
+          message: "Invalid email or password",
+        },
+        { status: 401 },
+      );
+    }
     if (!isPasswordCorrect) {
       return NextResponse.json(
         {

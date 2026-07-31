@@ -9,7 +9,7 @@ export async function GET() {
         ward_number,
         ward_name
       FROM wards
-      ORDER BY ward_number
+      ORDER BY ward_number;
     `);
 
     return NextResponse.json({

@@ -12,15 +12,27 @@ export async function createUser(
   name: string,
   email: string,
   password: string,
-  wardId: number,
+  role: "Citizen" | "Officer" | "Admin",
+  wardId: number | null,
 ) {
   const result = await pool.query(
     `
-    INSERT INTO users(name,email,password, ward_id)
-    VALUES($1,$2,$3,$4)
-    RETURNING *;
+    INSERT INTO users (
+      name,
+      email,
+      password,
+      role,
+      ward_id
+    )
+    VALUES ($1,$2,$3,$4,$5)
+    RETURNING
+      id,
+      name,
+      email,
+      role,
+      ward_id;
     `,
-    [name, email, password, wardId],
+    [name, email, password, role, wardId],
   );
 
   return result.rows[0];
