@@ -68,7 +68,7 @@ export default function Home() {
 
               <div>
                 <label className="block mb-2 font-medium">
-                  Father's Name
+                  Father&apos;s Name
                 </label>
                 <input
                   type="text"
@@ -79,7 +79,7 @@ export default function Home() {
 
               <div>
                 <label className="block mb-2 font-medium">
-                  Mother's Name
+                  Mother&apos;s Name
                 </label>
                 <input
                   type="text"
