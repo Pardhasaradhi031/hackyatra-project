@@ -18,7 +18,7 @@ export async function POST(req: Request) {
           success: false,
           errors: parsed.error.flatten().fieldErrors,
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
           success: false,
           message: "Email already exists",
         },
-        { status: 409 }
+        { status: 409 },
       );
     }
 
@@ -46,7 +46,7 @@ export async function POST(req: Request) {
         message: "User registered successfully",
         user,
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     console.error(error);
@@ -56,7 +56,7 @@ export async function POST(req: Request) {
         success: false,
         message: "Internal Server Error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
