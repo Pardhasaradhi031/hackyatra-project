@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import {pool} from "@/lib/db";
+import { pool } from "@/lib/db";
 import { getCurrentUser } from "@/lib/current-user";
 
 import { getSLAInfo, formatDate } from "@/lib/sla";
@@ -8,7 +8,7 @@ import { buildTimeline } from "@/lib/timeline";
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const user = await getCurrentUser();
@@ -21,7 +21,7 @@ export async function GET(
         },
         {
           status: 401,
-        }
+        },
       );
     }
 
@@ -57,7 +57,7 @@ export async function GET(
       FROM applications
       WHERE id = $1
       `,
-      [id]
+      [id],
     );
 
     if (rows.length === 0) {
@@ -68,17 +68,14 @@ export async function GET(
         },
         {
           status: 404,
-        }
+        },
       );
     }
 
     const application = rows[0];
 
     // Citizens can only view their own applications
-    if (
-      user.role === "Citizen" &&
-      application.citizen_id !== user.id
-    ) {
+    if (user.role === "Citizen" && application.citizen_id !== user.id) {
       return NextResponse.json(
         {
           success: false,
@@ -86,7 +83,7 @@ export async function GET(
         },
         {
           status: 403,
-        }
+        },
       );
     }
 
@@ -102,16 +99,12 @@ export async function GET(
           return fallback;
         })();
 
-    const sla = getSLAInfo(
-      createdAt,
-      slaDueDate,
-      7
-    );
+    const sla = getSLAInfo(createdAt, slaDueDate, 7);
 
     const timeline = buildTimeline(
       application.current_stage,
       createdAt,
-      updatedAt
+      updatedAt,
     );
 
     return NextResponse.json({
@@ -120,59 +113,42 @@ export async function GET(
       application: {
         id: application.id,
 
-        application_number:
-          application.application_number,
+        ward_id: application.ward_id,
+        application_number: application.application_number,
 
-        application_type:
-          application.application_type,
+        application_type: application.application_type,
 
-        child_name:
-          application.child_name,
+        child_name: application.child_name,
 
-        father_name:
-          application.father_name,
+        father_name: application.father_name,
 
-        mother_name:
-          application.mother_name,
+        mother_name: application.mother_name,
 
-        hospital_name:
-          application.hospital_name,
+        hospital_name: application.hospital_name,
 
-        date_of_birth:
-          application.date_of_birth,
+        date_of_birth: application.date_of_birth,
 
-        deceased_name:
-          application.deceased_name,
+        deceased_name: application.deceased_name,
 
-        date_of_death:
-          application.date_of_death,
+        date_of_death: application.date_of_death,
 
-        place_of_death:
-          application.place_of_death,
+        place_of_death: application.place_of_death,
 
-        cause_of_death:
-          application.cause_of_death,
+        cause_of_death: application.cause_of_death,
 
-        address:
-          application.address,
+        address: application.address,
 
-        status:
-          application.status,
+        status: application.status,
 
-        current_stage:
-          application.current_stage,
+        current_stage: application.current_stage,
 
-        submitted:
-          formatDate(createdAt),
+        submitted: formatDate(createdAt),
 
-        created_at:
-          application.created_at,
+        created_at: application.created_at,
 
-        updated_at:
-          application.updated_at,
+        updated_at: application.updated_at,
 
-        sla_due_date:
-          application.sla_due_date,
+        sla_due_date: application.sla_due_date,
 
         sla,
 
@@ -180,10 +156,7 @@ export async function GET(
       },
     });
   } catch (error) {
-    console.error(
-      "GET /api/applications/[id] error:",
-      error
-    );
+    console.error("GET /api/applications/[id] error:", error);
 
     return NextResponse.json(
       {
@@ -192,7 +165,7 @@ export async function GET(
       },
       {
         status: 500,
-      }
+      },
     );
   }
 }

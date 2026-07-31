@@ -22,7 +22,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const { name, email, password } = parsed.data;
+    const { name, email, password, wardId } = parsed.data;
 
     const existingUser = await findUserByEmail(email);
 
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
 
     const hashedPassword = await hashPassword(password);
 
-    const user = await createUser(name, email, hashedPassword);
+    const user = await createUser(name, email, hashedPassword, wardId);
 
     return NextResponse.json(
       {

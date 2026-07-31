@@ -4,7 +4,7 @@ import {
 } from "@/types/application";
 
 export async function createApplication(
-  data: CreateApplicationRequest,
+  data: CreateApplicationRequest
 ): Promise<CreateApplicationResponse> {
   const response = await fetch("/api/applications", {
     method: "POST",
@@ -27,7 +27,7 @@ export async function getApplications() {
   const data = await response.json();
 
   if (!response.ok) {
-    console.log("Failed to fetch applications", data);
+    throw new Error(data.message || "Failed to fetch applications");
   }
 
   return data;

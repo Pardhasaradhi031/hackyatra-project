@@ -1,10 +1,9 @@
 import { pool } from "@/lib/db";
 
 export async function findUserByEmail(email: string) {
-  const result = await pool.query(
-    `SELECT * FROM users WHERE email = $1`,
-    [email]
-  );
+  const result = await pool.query(`SELECT * FROM users WHERE email = $1`, [
+    email,
+  ]);
 
   return result.rows[0];
 }
@@ -12,15 +11,16 @@ export async function findUserByEmail(email: string) {
 export async function createUser(
   name: string,
   email: string,
-  password: string
+  password: string,
+  wardId: number,
 ) {
   const result = await pool.query(
     `
-    INSERT INTO users(name,email,password)
-    VALUES($1,$2,$3)
-    RETURNING id,name,email,role,created_at
+    INSERT INTO users(name,email,password, ward_id)
+    VALUES($1,$2,$3,$4)
+    RETURNING *;
     `,
-    [name, email, password]
+    [name, email, password, wardId],
   );
 
   return result.rows[0];
@@ -30,15 +30,15 @@ export async function findUserById(id: string) {
   const result = await pool.query(
     `
     SELECT
-      id,
-      name,
-      email,
-      role,
-      created_at
-    FROM users
-    WHERE id = $1
+id,
+name,
+email,
+role,
+ward_id
+FROM users
+WHERE id = $1;
     `,
-    [id]
+    [id],
   );
 
   return result.rows[0];
