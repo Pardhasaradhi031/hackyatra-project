@@ -17,3 +17,18 @@ export async function createApplication(
 
   return response.json();
 }
+
+export async function getApplications() {
+  const response = await fetch("/api/applications", {
+    method: "GET",
+    credentials: "include",
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to fetch applications");
+  }
+
+  return data;
+}

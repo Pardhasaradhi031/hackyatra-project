@@ -95,7 +95,7 @@ export default function CitizenDashboard() {
               </p>
 
               <Link
-                href="/citizen/applications/new?type=Birth"
+                href="/citizen/applications/new/birth"
                 className="mt-6 inline-block rounded-lg bg-blue-600 px-5 py-2 text-white transition hover:bg-blue-700"
               >
                 Apply
@@ -112,7 +112,7 @@ export default function CitizenDashboard() {
               </p>
 
               <Link
-                href="/citizen/applications/new?type=Death"
+                href="/citizen/applications/new/death"
                 className="mt-6 inline-block rounded-lg bg-green-600 px-5 py-2 text-white transition hover:bg-green-700"
               >
                 Apply

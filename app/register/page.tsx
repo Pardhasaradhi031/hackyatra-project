@@ -1,18 +1,54 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function RegisterPage() {
   const router = useRouter();
 
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [wardId, setWardId] = useState("");
+  const [loadingWards, setLoadingWards] = useState(true);
+
+
+  const [wards, setWards] = useState<
+    {
+      id: number;
+      ward_number: number;
+      ward_name: string;
+    }[]
+  >([]);
+
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    async function fetchWards() {
+      try {
+        const response = await fetch("/api/wards");
+
+        const data = await response.json();
+
+        console.log("Wards API:", data);
+
+        if (data.success) {
+          setWards(data.wards);
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoadingWards(false);
+      }
+    }
+
+    fetchWards();
+  }, []);
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
@@ -20,6 +56,15 @@ export default function RegisterPage() {
 
     setError("");
 
+    if (!wardId) {
+      setError("Please select your ward");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       return;
@@ -37,6 +82,7 @@ export default function RegisterPage() {
           name,
           email,
           password,
+          wardId: Number(wardId),
         }),
       });
 
@@ -97,6 +143,33 @@ export default function RegisterPage() {
             />
           </div>
 
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Ward
+            </label>
+
+            <select
+              required
+              value={wardId}
+              disabled={loadingWards}
+              onChange={(e) => setWardId(e.target.value)}
+              className="w-full rounded-md border border-gray-300 px-4 py-2 text-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
+            >
+              <option value="">
+                {loadingWards ? "Loading wards..." : "Select Ward"}
+              </option>
+
+              {wards.map((ward) => (
+                <option
+                  key={ward.id}
+                  value={ward.id}
+                >
+                  Ward {ward.ward_number} - {ward.ward_name}
+                </option>
+              ))}
+            </select>
+          </div>
+
           {/* Password */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -142,12 +215,12 @@ export default function RegisterPage() {
 
         <p className="mt-6 text-center text-sm text-gray-500">
           Already have an account?{" "}
-          <a
+          <Link
             href="/login"
             className="font-medium text-blue-600 hover:underline"
           >
             Login here
-          </a>
+          </Link>
         </p>
       </div>
     </div>

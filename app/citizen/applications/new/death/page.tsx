@@ -1,80 +1,150 @@
-export default function DeathRegistration() {
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+import { createApplication } from "@/services/application.service";
+
+export default function DeathCertificateRegistration() {
+
+  const router = useRouter();
+
+  const [loading, setLoading] = useState(false);
+  // Death
+  const [deceasedName, setDeceasedName] = useState("");
+  const [dateOfDeath, setDateOfDeath] = useState("");
+  const [placeOfDeath, setPlaceOfDeath] = useState("");
+  const [causeOfDeath, setCauseOfDeath] = useState("");
+  const [address, setAddress] = useState("");
+
+  
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
+    e.preventDefault();
+
+    setLoading(true);
+
+    try {
+      const response = await createApplication({
+        applicationType: "Death",
+        deceasedName,
+        dateOfDeath: dateOfDeath || undefined,
+        placeOfDeath,
+        causeOfDeath,
+        address,
+      });
+
+      if (response.success) {
+        alert("Application submitted successfully.");
+        router.push("/citizen/applications");
+      } else {
+        alert(response.message);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <main className="min-h-screen bg-gray-100 flex justify-center py-10">
+    <main className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
+      <div className="w-full max-w-5xl bg-white rounded-xl shadow-lg p-8">
+        <h1 className="text-3xl font-bold">Death Registration</h1>
 
-      <div className="bg-white w-full max-w-5xl rounded-xl shadow-lg p-8">
-
-        <h1 className="text-3xl font-bold">
-          Death Registration
-        </h1>
-
-        <p className="text-gray-500 mt-2">
-          Fill in the death registration details.
-        </p>
-
-        <form className="grid md:grid-cols-2 gap-6 mt-8">
-
+        <form className="grid md:grid-cols-2 gap-6 mt-8"
+          onSubmit={handleSubmit}>
           <div>
-            <label>Deceased Name</label>
+            <label className="block mb-2 font-medium">
+              Deceased Name
+            </label>
             <input
               type="text"
-              className="w-full border rounded-lg p-3 mt-2"
+              placeholder="Enter name"
+              className="w-full border rounded-lg p-3"
+              value={deceasedName}
+              onChange={(e) => setDeceasedName(e.target.value)}
             />
           </div>
 
           <div>
-            <label>Date of Death</label>
+            <label className="block mb-2 font-medium">
+              Date of Death
+            </label>
             <input
               type="date"
-              className="w-full border rounded-lg p-3 mt-2"
+              className="w-full border rounded-lg p-3"
+              value={dateOfDeath}
+              onChange={(e) => setDateOfDeath(e.target.value)}
             />
           </div>
 
           <div>
-            <label>Place of Death</label>
+            <label className="block mb-2 font-medium">
+              Place of Death
+            </label>
             <input
               type="text"
-              className="w-full border rounded-lg p-3 mt-2"
+              placeholder="Hospital / Home"
+              className="w-full border rounded-lg p-3"
+              value={placeOfDeath}
+              onChange={(e) => setPlaceOfDeath(e.target.value)}
             />
           </div>
 
           <div>
-            <label>Cause of Death</label>
+            <label className="block mb-2 font-medium">
+              Cause of Death
+            </label>
             <input
               type="text"
-              className="w-full border rounded-lg p-3 mt-2"
+              placeholder="Cause of death"
+              className="w-full border rounded-lg p-3"
+              value={causeOfDeath}
+              onChange={(e) => setCauseOfDeath(e.target.value)}
             />
           </div>
 
           <div className="md:col-span-2">
-            <label>Address</label>
+            <label className="block mb-2 font-medium">
+              Address
+            </label>
             <textarea
               rows={3}
-              className="w-full border rounded-lg p-3 mt-2"
+              placeholder="Enter address"
+              className="w-full border rounded-lg p-3"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
             />
           </div>
 
           <div className="md:col-span-2 flex justify-end gap-4">
-
             <button
-              type="reset"
-              className="border rounded-lg px-6 py-2"
+              type="button"
+              onClick={() => {
+                setDeceasedName("");
+                setDateOfDeath("");
+                setPlaceOfDeath("");
+                setCauseOfDeath("");
+                setAddress("");
+              }}
+              className="px-6 py-2 border rounded-lg hover:bg-gray-100"
             >
               Cancel
             </button>
 
             <button
-              className="bg-green-600 text-white rounded-lg px-6 py-2"
+              type="submit"
+              disabled={loading}
+              className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
             >
-              Submit
+              {loading ? "Submitting..." : "Submit Application"}
             </button>
-
           </div>
-
         </form>
-
       </div>
-
     </main>
   );
 }
