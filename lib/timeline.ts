@@ -1,61 +1,50 @@
 import { formatDate } from "./sla";
- 
-export type TimelineStatus = "completed" | "current" | "pending";
- 
+
 export type TimelineStage = {
-  title: string;
-  date: string | null;
-  status: TimelineStatus;
+  stage: string;
+  completed: boolean;
+  completedAt: string | null;
 };
- 
-// Fixed process flow, in order.
+
 export const STAGE_ORDER = [
   "Application Submitted",
   "Document Verification",
   "Officer Approval",
   "Certificate Issued",
 ] as const;
- 
-// Maps whatever string is stored in applications.current_stage to a
-// STAGE_ORDER entry. Update this if the values used by your officer
-// dashboard differ from these.
+
 const STAGE_ALIASES: Record<string, (typeof STAGE_ORDER)[number]> = {
   Submitted: "Application Submitted",
   "Application Submitted": "Application Submitted",
+
+  "Under Verification": "Document Verification",
   "Document Verification": "Document Verification",
-  "Waiting for Officer": "Officer Approval",
+
+  Verified: "Officer Approval",
   "Officer Approval": "Officer Approval",
+
+  Approved: "Certificate Issued",
   "Certificate Issued": "Certificate Issued",
 };
- 
-/**
- * NOTE: the current schema only stores `current_stage` + `updated_at`,
- * not a per-stage timestamp. So completed stages before the current one
- * reuse `updated_at` as their date since we have nothing more precise.
- * If you need accurate per-stage dates, add an
- * `application_status_history(application_id, stage, changed_at)` table
- * and swap the logic below to read from it.
- */
+
 export function buildTimeline(
   currentStage: string,
   submittedAt: Date,
-  updatedAt: Date
+  updatedAt: Date,
 ): TimelineStage[] {
-  const normalizedCurrent = STAGE_ALIASES[currentStage] ?? STAGE_ORDER[0];
-  const currentIndex = STAGE_ORDER.indexOf(normalizedCurrent);
- 
-  return STAGE_ORDER.map((title, index) => {
-    let status: TimelineStatus = "pending";
-    if (index < currentIndex) status = "completed";
-    else if (index === currentIndex) status = "current";
- 
-    let date: string | null = null;
-    if (index === 0) {
-      date = formatDate(submittedAt);
-    } else if (status === "completed" || status === "current") {
-      date = formatDate(updatedAt);
-    }
- 
-    return { title, date, status };
-  });
+  const normalizedStage =
+    STAGE_ALIASES[currentStage] ?? "Application Submitted";
+
+  const currentIndex = STAGE_ORDER.indexOf(normalizedStage);
+
+  return STAGE_ORDER.map((stage, index) => ({
+    stage,
+    completed: index <= currentIndex,
+    completedAt:
+      index <= currentIndex
+        ? index === 0
+          ? formatDate(submittedAt)
+          : formatDate(updatedAt)
+        : null,
+  }));
 }

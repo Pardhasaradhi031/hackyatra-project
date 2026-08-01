@@ -1,49 +1,52 @@
-import Sidebar from "@/components/officer/Sidebar";
-import StatCard from "@/components/officer/StatCard";
-import PendingTable from "@/components/officer/PendingTable";
-import { FileCheck, CheckCircle2, FileText } from "lucide-react";
+"use client";
 
-export default function Home() {
+import Link from "next/link";
+
+export default function OfficerDashboard() {
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      <Sidebar />
+    <main className="p-8">
+      <h1 className="text-3xl font-bold">
+        Officer Dashboard
+      </h1>
 
-      <main className="flex-1 p-8">
-        <h1 className="text-3xl font-bold text-gray-800">
-          Officer Dashboard
-        </h1>
+      <p className="mt-2 text-gray-600">
+        Welcome to the Municipal Officer Portal.
+      </p>
 
-        <p className="text-gray-500 mb-8">
-          Overview of application processing
-        </p>
+      <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
+        <Link
+          href="/officer/applications"
+          className="rounded-xl border bg-white p-6 shadow hover:shadow-lg"
+        >
+          <h2 className="text-xl font-semibold">
+            Applications
+          </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <StatCard
-            title="Pending Applications"
-            value="18"
-            icon={<FileText size={24} />}
-            color="blue"
-          />
+          <p className="mt-2 text-gray-500">
+            View and verify applications.
+          </p>
+        </Link>
 
-          <StatCard
-            title="Verified Today"
-            value="9"
-            icon={<CheckCircle2 size={24} />}
-            color="green"
-          />
+        <div className="rounded-xl border bg-white p-6 shadow">
+          <h2 className="text-xl font-semibold">
+            Certificates
+          </h2>
 
-          <StatCard
-            title="Issued Today"
-            value="5"
-            icon={<FileCheck size={24} />}
-            color="purple"
-          />
+          <p className="mt-2 text-gray-500">
+            Issued certificates will appear here.
+          </p>
         </div>
 
-        <div className="mt-8">
-          <PendingTable />
+        <div className="rounded-xl border bg-white p-6 shadow">
+          <h2 className="text-xl font-semibold">
+            Profile
+          </h2>
+
+          <p className="mt-2 text-gray-500">
+            Officer account information.
+          </p>
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }
